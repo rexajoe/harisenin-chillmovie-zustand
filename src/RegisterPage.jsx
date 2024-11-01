@@ -11,7 +11,8 @@ import useAuthStore from "../useAuthStore";
 
 const RegisterPage = () => {
   // State untuk username, password, confirm password, dan error
-  const { setUsername, setPassword, setConfirmPassword } = useAuthStore();
+  const { setUsername, setPassword, setConfirmPassword, userExists, addUser } =
+    useAuthStore();
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
   const [inputConfirmPassword, setInputConfirmPassword] = useState("");
@@ -24,6 +25,9 @@ const RegisterPage = () => {
 
   // Fungsi untuk menangani proses pendaftaran
   const handleRegister = () => {
+    setUsername(inputUsername);
+    setPassword(inputPassword);
+    setConfirmPassword(inputConfirmPassword);
     if (!inputUsername) {
       setError("Username tidak boleh kosong");
       return;
@@ -36,11 +40,12 @@ const RegisterPage = () => {
       setError("Kata Sandi tidak sama");
       return;
     }
-    if (userExists(username)) {
+
+    if (userExists(inputUsername)) {
       setError("Username sudah terdaftar");
       return;
     }
-    addUser({ username, password });
+    addUser({ username: inputUsername, password: inputPassword });
     navigate("/beranda");
   };
 
@@ -64,7 +69,7 @@ const RegisterPage = () => {
             className="mb-5"
             placeholder="Masukkan username"
             type="text"
-            value={username}
+            value={inputUsername}
             onChange={(e) => setInputUsername(e.target.value)}
           />
 
@@ -75,7 +80,7 @@ const RegisterPage = () => {
               className="mb-2"
               placeholder="Masukkan kata sandi"
               type={showPassword ? "text" : "password"}
-              value={password}
+              value={inputPassword}
               onChange={(e) => setInputPassword(e.target.value)}
             />
             <span
@@ -95,7 +100,7 @@ const RegisterPage = () => {
             <CustomInput
               placeholder="Masukkan kata sandi"
               type={showPassword ? "text" : "password"}
-              value={confirmPassword}
+              value={inputConfirmPassword}
               onChange={(e) => setInputConfirmPassword(e.target.value)}
             />
             <span

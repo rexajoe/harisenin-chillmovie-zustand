@@ -10,7 +10,14 @@ import googleLogo from "./assets/google-logo.png";
 import useAuthStore from "../useAuthStore";
 
 const LoginPage = () => {
-  const { username, password, setUsername, setPassword } = useAuthStore();
+  const {
+    users,
+    username,
+    password,
+    setUsername,
+    setPassword,
+    clearCredentials,
+  } = useAuthStore();
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,7 +31,11 @@ const LoginPage = () => {
     setUsername(inputUsername);
     setPassword(inputPassword);
 
+    const user = users.find(
+      (u) => u.username === username && u.password === password
+    );
     if (user) {
+      clearCredentials();
       navigate("/beranda");
     } else {
       setError("Username / Password tidak sesuai");
@@ -54,7 +65,7 @@ const LoginPage = () => {
             type="text"
             className="mb-5"
             placeholder="Masukkan username"
-            value={username}
+            value={inputUsername}
             onChange={(e) => setInputUsername(e.target.value)}
           />
           {/*Kata Sandi Section*/}
@@ -63,7 +74,7 @@ const LoginPage = () => {
             <CustomInput
               type={showPassword ? "text" : "password"}
               placeholder="Masukkan kata sandi"
-              value={password}
+              value={inputPassword}
               onChange={(e) => setInputPassword(e.target.value)}
             />
             <span

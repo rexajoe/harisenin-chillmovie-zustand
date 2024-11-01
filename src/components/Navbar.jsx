@@ -1,6 +1,6 @@
 import LogoBrand from "./LogoBrand";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import avatar from "../assets/avatar.png";
 import arrowDown from "../assets/arrowdown.png";
 import profile from "../assets/profile.png";
@@ -10,12 +10,14 @@ import useAuthStore from "../../useAuthStore";
 const Navbar = () => {
   const { clearCredentials } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
-    const handleLogout = () => {
-      clearCredentials();
-    };
+  };
+  const handleLogout = () => {
+    clearCredentials();
+    navigate("/");
   };
 
   return (
@@ -75,7 +77,7 @@ const Navbar = () => {
                   height="20px"
                   className="filter invert group-hover:hidden"
                 />
-                <Link to={handleLogout}>Keluar</Link>
+                <button onClick={handleLogout}>Keluar</button>
               </li>
             </div>
           )}
