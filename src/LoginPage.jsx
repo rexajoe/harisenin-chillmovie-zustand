@@ -10,14 +10,7 @@ import googleLogo from "./assets/google-logo.png";
 import useAuthStore from "./stores/useAuthStore";
 
 const LoginPage = () => {
-  const {
-    users,
-    username,
-    password,
-    setUsername,
-    setPassword,
-    clearCredentials,
-  } = useAuthStore();
+  const { users, clearCredentials } = useAuthStore();
   const [inputUsername, setInputUsername] = useState("");
   const [inputPassword, setInputPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,11 +21,8 @@ const LoginPage = () => {
   };
 
   const handleLogin = () => {
-    setUsername(inputUsername);
-    setPassword(inputPassword);
-
     const user = users.find(
-      (u) => u.username === username && u.password === password
+      (u) => u.username === inputUsername && u.password === inputPassword
     );
     if (user) {
       clearCredentials();

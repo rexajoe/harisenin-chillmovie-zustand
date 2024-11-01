@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 
 const useMovieStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       topRatingMovies: [],
       trendingMovies: [],
       newMovies: [],
@@ -12,11 +12,32 @@ const useMovieStore = create(
       daftarSaya: [],
 
       // Fungsi untuk mengupdate state dari hasil data API
-      setTopRatingMovies: (data) => set({ topRatingMovies: data }),
-      setTrendingMovies: (data) => set({ trendingMovies: data }),
-      setNewMovies: (data) => set({ newMovies: data }),
-      setContinueWatching: (data) => set({ continueWatching: data }),
-      setDaftarSaya: (data) => set({ daftarSaya: data }),
+
+      setTopRatingMovies: (data) => {
+        if (get().topRatingMovies.length === 0) {
+          set({ topRatingMovies: data });
+        }
+      },
+      setTrendingMovies: (data) => {
+        if (get().trendingMovies.length === 0) {
+          set({ trendingMovies: data });
+        }
+      },
+      setNewMovies: (data) => {
+        if (get().newMovies.length === 0) {
+          set({ newMovies: data });
+        }
+      },
+      setContinueWatching: (data) => {
+        if (get().continueWatching.length === 0) {
+          set({ continueWatching: data });
+        }
+      },
+      setDaftarSaya: (data) => {
+        if (get().daftarSaya.length === 0) {
+          set({ daftarSaya: data });
+        }
+      },
     }),
     {
       name: "movie-storage", // Key untuk localStorage

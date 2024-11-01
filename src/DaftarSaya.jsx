@@ -23,8 +23,11 @@ const DaftarSaya = () => {
         setLoading(false);
       }
     };
-
-    fetchMovies();
+    if (daftarSaya.length === 0) {
+      fetchMovies();
+    } else {
+      setLoading(false);
+    }
   }, [setDaftarSaya]);
 
   if (loading) {

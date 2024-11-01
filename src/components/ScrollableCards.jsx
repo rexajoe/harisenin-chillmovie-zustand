@@ -22,7 +22,6 @@ const ScrollableCards = () => {
     const fetchMovies = async () => {
       setLoading(true);
       try {
-        // Melakukan fetch untuk keempat data sekaligus
         const [
           topRatingData,
           trendingData,
@@ -41,21 +40,35 @@ const ScrollableCards = () => {
           ),
         ]);
 
-        // Menyimpan data hasil fetch ke dalam store zustand
+        // Menyimpan data hasil fetch ke dalam zustand store
         setTopRatingMovies(topRatingData);
         setTrendingMovies(trendingData);
         setNewMovies(newMoviesData);
         setContinueWatching(continueWatchingData);
       } catch (error) {
         console.error("Error fetching movie data:", error);
-        setError("Terjadi kesalahan saat mengambil data film."); // Set error message
+        setError("Terjadi kesalahan saat mengambil data film.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMovies();
+    // Periksa apakah data sudah ada sebelum memanggil fetch
+    if (
+      topRatingMovies.length === 0 ||
+      trendingMovies.length === 0 ||
+      newMovies.length === 0 ||
+      continueWatching.length === 0
+    ) {
+      fetchMovies();
+    } else {
+      setLoading(false);
+    }
   }, [
+    topRatingMovies,
+    trendingMovies,
+    newMovies,
+    continueWatching,
     setTopRatingMovies,
     setTrendingMovies,
     setNewMovies,
