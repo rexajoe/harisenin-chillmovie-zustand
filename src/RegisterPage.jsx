@@ -7,46 +7,41 @@ import bgImageDaftar from "../src/assets/background-daftar.jpeg";
 import googleLogoDaftar from "./assets/google-logo.png";
 import eyeClose from "./assets/eye.png";
 import eyeOpen from "./assets/eye-open.png";
+import useAuthStore from "../useAuthStore";
 
 const RegisterPage = () => {
   // State untuk username, password, confirm password, dan error
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const { setUsername, setPassword, setConfirmPassword } = useAuthStore();
+  const [inputUsername, setInputUsername] = useState("");
+  const [inputPassword, setInputPassword] = useState("");
+  const [inputConfirmPassword, setInputConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
-      setShowPassword((prevState) => !prevState);
-    };
-  
+    setShowPassword((prevState) => !prevState);
+  };
 
   // Fungsi untuk menangani proses pendaftaran
   const handleRegister = () => {
-    if (!username) {
-      setError('Username tidak boleh kosong');
+    if (!inputUsername) {
+      setError("Username tidak boleh kosong");
       return;
     }
-    if (!password) {
-      setError('Kata Sandi tidak boleh kosong');
+    if (!inputPassword) {
+      setError("Kata Sandi tidak boleh kosong");
       return;
     }
-    if (password !== confirmPassword) {
-      setError('Kata Sandi tidak sama');
+    if (inputPassword !== inputConfirmPassword) {
+      setError("Kata Sandi tidak sama");
       return;
     }
-
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const userExists = users.find((user) => user.username === username);
-    if (userExists) {
-      setError('Username sudah terdaftar')
+    if (userExists(username)) {
+      setError("Username sudah terdaftar");
       return;
     }
-
-    users.push({username, password});
-    localStorage.setItem('users', JSON.stringify(users));
-    navigate('/beranda');
-
+    addUser({ username, password });
+    navigate("/beranda");
   };
 
   return (
@@ -65,40 +60,52 @@ const RegisterPage = () => {
 
           {/* Input untuk Username */}
           <label className="text-white text-lg">Username</label>
-          <CustomInput 
-            className="mb-5" 
-            placeholder="Masukkan username" 
-            type="text" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} 
+          <CustomInput
+            className="mb-5"
+            placeholder="Masukkan username"
+            type="text"
+            value={username}
+            onChange={(e) => setInputUsername(e.target.value)}
           />
 
           {/* Input untuk Kata Sandi */}
           <label className="text-white text-lg">Kata Sandi</label>
           <div className="relative mb-4">
-            <CustomInput 
-              className="mb-2" 
-              placeholder="Masukkan kata sandi" 
-              type={showPassword ? 'text' : 'password'}
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
+            <CustomInput
+              className="mb-2"
+              placeholder="Masukkan kata sandi"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setInputPassword(e.target.value)}
             />
-            <span className="absolute right-5 top-6 transform -translate-y-1/2 cursor-pointer w-5 h-4" onClick={togglePasswordVisibility}>
-              <img src={showPassword ? eyeOpen : eyeClose} alt={showPassword ? "Hide Password" : "Show Password"} />
+            <span
+              className="absolute right-5 top-6 transform -translate-y-1/2 cursor-pointer w-5 h-4"
+              onClick={togglePasswordVisibility}
+            >
+              <img
+                src={showPassword ? eyeOpen : eyeClose}
+                alt={showPassword ? "Hide Password" : "Show Password"}
+              />
             </span>
           </div>
 
           {/* Input untuk Konfirmasi Kata Sandi */}
           <label className="text-white text-lg">Konfirmasi Kata Sandi</label>
           <div className="relative mb-4">
-            <CustomInput 
-              placeholder="Masukkan kata sandi" 
-              type={showPassword ? 'text' : 'password'}
-              value={confirmPassword} 
-              onChange={(e) => setConfirmPassword(e.target.value)} 
+            <CustomInput
+              placeholder="Masukkan kata sandi"
+              type={showPassword ? "text" : "password"}
+              value={confirmPassword}
+              onChange={(e) => setInputConfirmPassword(e.target.value)}
             />
-            <span className="absolute right-5 top-6 transform -translate-y-1/2 cursor-pointer w-5 h-4" onClick={togglePasswordVisibility}>
-              <img src={showPassword ? eyeOpen : eyeClose} alt={showPassword ? 'Hide Password' : 'Show Password'} />
+            <span
+              className="absolute right-5 top-6 transform -translate-y-1/2 cursor-pointer w-5 h-4"
+              onClick={togglePasswordVisibility}
+            >
+              <img
+                src={showPassword ? eyeOpen : eyeClose}
+                alt={showPassword ? "Hide Password" : "Show Password"}
+              />
             </span>
           </div>
           {/* Menampilkan pesan error jika ada */}

@@ -6,11 +6,16 @@ import arrowDown from "../assets/arrowdown.png";
 import profile from "../assets/profile.png";
 import crown from "../assets/crown.svg";
 import close from "../assets/close.svg";
+import useAuthStore from "../../useAuthStore";
 const Navbar = () => {
+  const { clearCredentials } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
+    const handleLogout = () => {
+      clearCredentials();
+    };
   };
 
   return (
@@ -22,7 +27,10 @@ const Navbar = () => {
         <LogoBrand className="ml-[5vw]" />
         <li className="text-white">Series</li>
         <li className="text-white">Film</li>
-        <li className="text-white"> <Link to='/daftar-saya'>Daftar Saya</Link></li>
+        <li className="text-white">
+          {" "}
+          <Link to="/daftar-saya">Daftar Saya</Link>
+        </li>
       </ul>
       <ul className="flex justify-around gap-3 items-center mr-[5vw]">
         <li className="w-7 h-7 sm:w-10 sm:h-10">
@@ -67,7 +75,7 @@ const Navbar = () => {
                   height="20px"
                   className="filter invert group-hover:hidden"
                 />
-                <Link to="/">Keluar</Link>
+                <Link to={handleLogout}>Keluar</Link>
               </li>
             </div>
           )}
