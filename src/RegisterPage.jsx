@@ -7,7 +7,7 @@ import bgImageDaftar from "../src/assets/background-daftar.jpeg";
 import googleLogoDaftar from "./assets/google-logo.png";
 import eyeClose from "./assets/eye.png";
 import eyeOpen from "./assets/eye-open.png";
-import useAuthStore from "../useAuthStore";
+import useAuthStore from "./stores/useAuthStore";
 
 const RegisterPage = () => {
   // State untuk username, password, confirm password, dan error

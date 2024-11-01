@@ -7,7 +7,7 @@ import bgImageLogin from "./assets/background-login.jpeg";
 import eyeClose from "./assets/eye.png";
 import eyeOpen from "./assets/eye-open.png";
 import googleLogo from "./assets/google-logo.png";
-import useAuthStore from "../useAuthStore";
+import useAuthStore from "./stores/useAuthStore";
 
 const LoginPage = () => {
   const {

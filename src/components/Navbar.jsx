@@ -6,7 +6,7 @@ import arrowDown from "../assets/arrowdown.png";
 import profile from "../assets/profile.png";
 import crown from "../assets/crown.svg";
 import close from "../assets/close.svg";
-import useAuthStore from "../../useAuthStore";
+import useAuthStore from "../stores/useAuthStore";
 const Navbar = () => {
   const { clearCredentials } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);

@@ -1,86 +1,73 @@
 import HorizontalCards from "./HorizontalCards";
 import VerticalCards from "./VerticalCards";
 import { useEffect, useState } from "react";
+import useMovieStore from "../stores/useMovieStore"; // Pastikan path ini benar
 
 const ScrollableCards = () => {
-  const [topRatingMovies, setTopRatingMovies] = useState([]);
-  const [trendingMovies, setTrendingMovies] = useState([]);
-  const [newMovies, setNewMovies] = useState([]);
-  const [continueWatching, setContinueWatching] = useState([]);
+  const {
+    setTopRatingMovies,
+    setTrendingMovies,
+    setNewMovies,
+    setContinueWatching,
+    topRatingMovies, // Pastikan untuk mengambil state ini
+    trendingMovies, // Pastikan untuk mengambil state ini
+    newMovies, // Pastikan untuk mengambil state ini
+    continueWatching, // Pastikan untuk mengambil state ini
+  } = useMovieStore();
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const topRatingMoviesCache = localStorage.getItem("topRatingMovies");
-    const trendingMoviesCache = localStorage.getItem("trendingMovies");
-    const newMoviesCache = localStorage.getItem("newMovies");
-    const continueWatchingCache = localStorage.getItem("continueWatching");
+    const fetchMovies = async () => {
+      setLoading(true);
+      try {
+        // Melakukan fetch untuk keempat data sekaligus
+        const [
+          topRatingData,
+          trendingData,
+          newMoviesData,
+          continueWatchingData,
+        ] = await Promise.all([
+          fetch(import.meta.env.VITE_apiTopRatingMovies).then((res) =>
+            res.json()
+          ),
+          fetch(import.meta.env.VITE_apiTrendingMovies).then((res) =>
+            res.json()
+          ),
+          fetch(import.meta.env.VITE_apiNewMovies).then((res) => res.json()),
+          fetch(import.meta.env.VITE_apiContinueWatching).then((res) =>
+            res.json()
+          ),
+        ]);
 
-    if (
-      topRatingMoviesCache &&
-      trendingMoviesCache &&
-      newMoviesCache &&
-      continueWatchingCache
-    ) {
-      setTopRatingMovies(JSON.parse(topRatingMoviesCache));
-      setTrendingMovies(JSON.parse(trendingMoviesCache));
-      setNewMovies(JSON.parse(newMoviesCache));
-      setContinueWatching(JSON.parse(continueWatchingCache));
-      setLoading(false);
-    } else {
-      Promise.all([
-        fetch(import.meta.env.VITE_apiTopRatingMovies).then((res) =>
-          res.json()
-        ),
-        fetch(import.meta.env.VITE_apiTrendingMovies).then((res) => res.json()),
-        fetch(import.meta.env.VITE_apiNewMovies).then((res) => res.json()),
-        fetch(import.meta.env.VITE_apiContinueWatching).then((res) =>
-          res.json()
-        ),
-      ])
-        .then(
-          ([
-            topRatingData,
-            trendingData,
-            newMoviesData,
-            continueWatchingData,
-          ]) => {
-            setTopRatingMovies(topRatingData);
-            setTrendingMovies(trendingData);
-            setNewMovies(newMoviesData);
-            setContinueWatching(continueWatchingData);
+        // Menyimpan data hasil fetch ke dalam store zustand
+        setTopRatingMovies(topRatingData);
+        setTrendingMovies(trendingData);
+        setNewMovies(newMoviesData);
+        setContinueWatching(continueWatchingData);
+      } catch (error) {
+        console.error("Error fetching movie data:", error);
+        setError("Terjadi kesalahan saat mengambil data film."); // Set error message
+      } finally {
+        setLoading(false);
+      }
+    };
 
-            // Simpan ke localStorage
-            localStorage.setItem(
-              "topRatingMovies",
-              JSON.stringify(topRatingData)
-            );
-            localStorage.setItem(
-              "trendingMovies",
-              JSON.stringify(trendingData)
-            );
-            localStorage.setItem("newMovies", JSON.stringify(newMoviesData));
-            localStorage.setItem(
-              "continueWatching",
-              JSON.stringify(continueWatchingData)
-            );
-
-            setLoading(false);
-          }
-        )
-        .catch((error) => {
-          setError(error.message);
-          setLoading(false);
-        });
-    }
-  }, []);
+    fetchMovies();
+  }, [
+    setTopRatingMovies,
+    setTrendingMovies,
+    setNewMovies,
+    setContinueWatching,
+  ]);
 
   if (loading) {
     return <p className="text-white">Loading movies...</p>;
   }
 
   if (error) {
-    return <p>Error: {error}</p>;
+    return <p className="text-red-500">Error: {error}</p>; // Tampilkan error jika ada
   }
 
   return (
